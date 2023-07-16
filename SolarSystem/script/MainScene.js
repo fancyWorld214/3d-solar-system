@@ -101,7 +101,7 @@ if (!BABYLON.Engine.isSupported()) {
         });
     });
 
-    setUpCameraMovingPattern(camera0, scene0);
+    // setUpCameraMovingPattern(camera0, scene0);
 
     // Resize
     window.addEventListener("resize", function () {

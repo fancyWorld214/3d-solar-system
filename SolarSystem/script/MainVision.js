@@ -189,23 +189,7 @@ export default class MainVision {
             //console.log(BABYLON.Tools.GetFps().toFixed() + " fps");
         };
         camera.fov = 0.5;
-        function updateCamera() {
-            // Calculate the direction from the Earth to the Sun
-            var direction = BABYLON.Vector3.Normalize(earth.position.subtract(sun.position));
-            //console.log(`earth.position: ${earth.position}`)
-            //console.log(`camera: ${camera}`)
-            // Set the camera's position relative to the Earth (adjust this value based on your desired camera distance)
-            camera.position = earth.position.add(direction.scale(0.8));
-
-            // Set the camera's target to always look at the Sun
-            //camera.setTarget(sun.position);
-        }
-
-        // Register the update function to be called every frame
-        scene.registerBeforeRender(updateCamera);
-
-
-
+        
         engine.runRenderLoop(function () {
             scene.render();
         }
@@ -279,9 +263,9 @@ export default class MainVision {
             // 配置场景
             this.setUp(this.engine, this.scene, this.canvas, this.camera);
             this.setUpCameraMovingPattern(this.camera, this.scene);
-            window.addEventListener("resize", function () {
-                this.engine.resize();
-            });
+            // window.addEventListener("resize", function () {
+            //     this.engine.resize();
+            // });
         }
     }
 
