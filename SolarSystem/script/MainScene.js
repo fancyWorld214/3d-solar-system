@@ -84,7 +84,7 @@ if (!BABYLON.Engine.isSupported()) {
         video.src = videoURL;
         chunks = [];
         recorder.start();
-    }, 2000);
+    }, 50);
 
     //必须要video的metadata加载完成后才能进入画中画
     video.addEventListener("loadedmetadata", () => {

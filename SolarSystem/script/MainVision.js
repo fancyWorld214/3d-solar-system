@@ -189,7 +189,7 @@ export default class MainVision {
             //console.log(BABYLON.Tools.GetFps().toFixed() + " fps");
         };
         camera.fov = 0.5;
-        
+
         engine.runRenderLoop(function () {
             scene.render();
         }

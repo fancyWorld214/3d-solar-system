@@ -116,7 +116,7 @@ export default class SunEclipse {
 
             // Update moon position and rotation
             moonSpeed =
-                ((elapsed_t % einUmlauf) * 360) / (27.3 * (einUmlauf / 365.24));
+                ((elapsed_t % einUmlauf) * 360) / (27.3 * (einUmlauf / 365.24)) * 0.2;
             var moonradians = (moonSpeed * Math.PI) / 180;
             moon.position.x =
                 Math.cos(moonradians) * moonOrbitRadius + earth.position.x;
@@ -126,7 +126,7 @@ export default class SunEclipse {
             moon.rotation.y = (elapsed_t * (360 * 27.3)) / min2ms;
         };
 
-        camera.fov = 0.5;
+        camera.fov = 0.05;
         function updateCamera() {
             // Calculate the direction from the Earth to the Sun
             var direction = BABYLON.Vector3.Normalize(
