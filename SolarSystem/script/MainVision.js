@@ -1,5 +1,5 @@
-export default class MainVision{
-    constructor(canvas,engine,scene,camera){
+export default class MainVision {
+    constructor(canvas, engine, scene, camera) {
         this.canvas = canvas;
         this.engine = engine;
         this.scene = scene;
@@ -22,8 +22,8 @@ export default class MainVision{
         var mars_distance = 227.9 * distanceScale;
         var jupiter_distance = 778.6 * distanceScale;
         var neptune_distance = 4495 * distanceScale;
-    
-    
+
+
         //Bonusteil:3
         var skybox = BABYLON.MeshBuilder.CreateBox("skyBox", { size: 1000.0 }, scene);
         var skyboxMaterial = new BABYLON.StandardMaterial("skyBox", scene);
@@ -37,10 +37,10 @@ export default class MainVision{
         var sun = BABYLON.Mesh.CreateSphere("Sun", sun_diameter, 0.65, scene);
         var earth = BABYLON.Mesh.CreateSphere("Earth", earth_diameter, 0.3, scene);
         var moon = BABYLON.Mesh.CreateSphere("Moon", moon_diameter, 0.075, scene);
-    
+
 
         camera.parent = sun;
-    
+
         //Bonusteil:2
         var mars = BABYLON.Mesh.CreateSphere("Mars", mars_diameter, 0.25, scene);
         var jupiter = BABYLON.Mesh.CreateSphere("Jupiter", jupiter_diameter, 0.35, scene);
@@ -86,15 +86,15 @@ export default class MainVision{
         material6.emissiveColor = new BABYLON.Color3(0.1, 0.1, 0.1);
         material6.diffuseTexture.vScale = -1;
         material6.diffuseTexture.uScale = -1;
-    
-    
+
+
         earth.material = material1;
         moon.material = material2;
         sun.material = material3;
         mars.material = material4;
         jupiter.material = material5;
         neptune.material = material6;
-    
+
         var light = new BABYLON.PointLight("dir01", new BABYLON.Vector3(-0.0, -0.0, 0.0), scene);
         light.diffuse = new BABYLON.Color3(1.0, 1.0, 1.0);
         light.intensity = 1.0;
@@ -110,7 +110,7 @@ export default class MainVision{
         var sim_day = sim_year / 365.24;
 
         var moon_local_pos = new BABYLON.Vector3((-1.0) * moon_distance, 0, 0);
-    
+
         //console.log(sun.position);
 
         // Set initial earth position
@@ -198,91 +198,91 @@ export default class MainVision{
             camera.position = earth.position.add(direction.scale(0.8));
 
             // Set the camera's target to always look at the Sun
-            camera.setTarget(sun.position);
+            //camera.setTarget(sun.position);
         }
-    
+
         // Register the update function to be called every frame
         scene.registerBeforeRender(updateCamera);
 
-    
-    
+
+
         engine.runRenderLoop(function () {
             scene.render();
         }
         );
     }
     setUpCameraMovingPattern(camera, scene) { // Define the movement speed for the camera
-    var cameraSpeed = 0.1;
+        var cameraSpeed = 0.1;
 
-    // Add event listeners to detect key presses
-    window.addEventListener("keydown", function (event) {
-        var keyCode = event.keyCode;
+        // Add event listeners to detect key presses
+        window.addEventListener("keydown", function (event) {
+            var keyCode = event.keyCode;
 
-        // Move forward (W key)
-        if (keyCode === 87) {
-            moveCameraForward();
-        }
-
-        // Move backward (S key)
-        if (keyCode === 83) {
-            moveCameraBackward();
-        }
-
-        // Move left (A key)
-        if (keyCode === 65) {
-            moveCameraLeft();
-        }
-
-        // Move right (D key)
-        if (keyCode === 68) {
-            moveCameraRight();
-        }
-    });
-
-    // Helper functions to move the camera
-    function moveCameraForward() {
-        var direction = BABYLON.Vector3.Normalize(camera.getDirection(BABYLON.Axis.Z));
-        var cur_position = camera.position;
-        camera.position = new BABYLON.Vector3(cur_position.x + cameraSpeed * direction.x,
-            cur_position.y + cameraSpeed * direction.y, cur_position.z + cameraSpeed * direction.z);
-    }
-
-    function moveCameraBackward() {
-        var direction = BABYLON.Vector3.Normalize(camera.getDirection(BABYLON.Axis.Z));
-        var cur_position = camera.position;
-        camera.position = new BABYLON.Vector3(cur_position.x - cameraSpeed * direction.x,
-            cur_position.y - cameraSpeed * direction.y, cur_position.z - cameraSpeed * direction.z);
-    }
-
-    function moveCameraLeft() {
-        var direction = BABYLON.Vector3.Normalize(camera.getDirection(BABYLON.Axis.Z));
-        var sideDirection = BABYLON.Vector3.Cross(direction, camera.upVector);
-        var cur_position = camera.position;
-        camera.position = new BABYLON.Vector3(cur_position.x + cameraSpeed * sideDirection.x,
-            cur_position.y + cameraSpeed * sideDirection.y, cur_position.z + cameraSpeed * sideDirection.z);
-        // camera.position.addInPlace(sideDirection.scaleInPlace(-cameraSpeed));
-    }
-
-    function moveCameraRight() {
-        var direction = BABYLON.Vector3.Normalize(camera.getDirection(BABYLON.Axis.Z));
-        var sideDirection = BABYLON.Vector3.Cross(direction, camera.upVector);
-        var cur_position = camera.position;
-        camera.position = new BABYLON.Vector3(cur_position.x - cameraSpeed * sideDirection.x,
-            cur_position.y - cameraSpeed * sideDirection.y, cur_position.z - cameraSpeed * sideDirection.z);
-    }
-    }
-    Building(){
-            if (!BABYLON.Engine.isSupported()) {
-                window.alert('Browser not supported');
-            } else {
-                // 初始化场景要素
-                // 配置场景
-                this.setUp(this.engine, this.scene, this.canvas, this.camera);
-                this.setUpCameraMovingPattern(this.camera, this.scene);
-                window.addEventListener("resize", function () {
-                    this.engine.resize();
-                });
+            // Move forward (W key)
+            if (keyCode === 87) {
+                moveCameraForward();
             }
+
+            // Move backward (S key)
+            if (keyCode === 83) {
+                moveCameraBackward();
+            }
+
+            // Move left (A key)
+            if (keyCode === 65) {
+                moveCameraLeft();
+            }
+
+            // Move right (D key)
+            if (keyCode === 68) {
+                moveCameraRight();
+            }
+        });
+
+        // Helper functions to move the camera
+        function moveCameraForward() {
+            var direction = BABYLON.Vector3.Normalize(camera.getDirection(BABYLON.Axis.Z));
+            var cur_position = camera.position;
+            camera.position = new BABYLON.Vector3(cur_position.x + cameraSpeed * direction.x,
+                cur_position.y + cameraSpeed * direction.y, cur_position.z + cameraSpeed * direction.z);
+        }
+
+        function moveCameraBackward() {
+            var direction = BABYLON.Vector3.Normalize(camera.getDirection(BABYLON.Axis.Z));
+            var cur_position = camera.position;
+            camera.position = new BABYLON.Vector3(cur_position.x - cameraSpeed * direction.x,
+                cur_position.y - cameraSpeed * direction.y, cur_position.z - cameraSpeed * direction.z);
+        }
+
+        function moveCameraLeft() {
+            var direction = BABYLON.Vector3.Normalize(camera.getDirection(BABYLON.Axis.Z));
+            var sideDirection = BABYLON.Vector3.Cross(direction, camera.upVector);
+            var cur_position = camera.position;
+            camera.position = new BABYLON.Vector3(cur_position.x + cameraSpeed * sideDirection.x,
+                cur_position.y + cameraSpeed * sideDirection.y, cur_position.z + cameraSpeed * sideDirection.z);
+            // camera.position.addInPlace(sideDirection.scaleInPlace(-cameraSpeed));
+        }
+
+        function moveCameraRight() {
+            var direction = BABYLON.Vector3.Normalize(camera.getDirection(BABYLON.Axis.Z));
+            var sideDirection = BABYLON.Vector3.Cross(direction, camera.upVector);
+            var cur_position = camera.position;
+            camera.position = new BABYLON.Vector3(cur_position.x - cameraSpeed * sideDirection.x,
+                cur_position.y - cameraSpeed * sideDirection.y, cur_position.z - cameraSpeed * sideDirection.z);
+        }
+    }
+    Building() {
+        if (!BABYLON.Engine.isSupported()) {
+            window.alert('Browser not supported');
+        } else {
+            // 初始化场景要素
+            // 配置场景
+            this.setUp(this.engine, this.scene, this.canvas, this.camera);
+            this.setUpCameraMovingPattern(this.camera, this.scene);
+            window.addEventListener("resize", function () {
+                this.engine.resize();
+            });
+        }
     }
 
 }
