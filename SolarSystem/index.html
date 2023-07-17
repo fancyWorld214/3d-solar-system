@@ -1,41 +1,43 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <title>CGV-Aufgabe 1</title>
-    <script src="https://cdn.babylonjs.com/babylon.js"></script>
-    <script src="script/hand.js"></script>
-    <script src="script/MainScene.js" type="module"></script>
-    <style type="text/css">
-      html,
-      body,
-      canvas {
-        width: 100%;
-        height: 95%;
-        padding: 0;
-        margin: 0;
-        overflow: hidden;
-      }
 
-      #renderCanvas {
-        display: none;
-      }
+<head>
+  <title>CGV-Aufgabe 1</title>
+  <script src="https://cdn.babylonjs.com/babylon.js"></script>
+  <script src="script/hand.js"></script>
+  <script src="script/MainScene.js" type="module"></script>
+  <style type="text/css">
+    html,
+    body,
+    canvas {
+      width: 100%;
+      height: 95%;
+      padding: 0;
+      margin: 0;
+      overflow: hidden;
+    }
 
-      #btn {
-        color: black;
-        font-display: block;
-      }
+    #renderCanvas {
+      display: none;
+    }
 
-      #video {
-        display: none;
-      }
-    </style>
-  </head>
+    #btn {
+      color: black;
+      font-display: block;
+    }
 
-  <body>
-    <!-- 若需触发画中画，必须用户侧有相应的动作，无法直接从js代码触发 -->
-    <button id="btn">Start</button>
-    <canvas id="overallCanvas"></canvas>
-    <canvas id="renderCanvas"></canvas>
-    <video id="video" autoplay></video>
-  </body>
+    #video {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- 若需触发画中画，必须用户侧有相应的动作，无法直接从js代码触发 -->
+  <button id="btn">Start</button>
+  <canvas id="overallCanvas"></canvas>
+  <canvas id="renderCanvas"></canvas>
+  <video id="video" autoplay preload="auto"></video>
+</body>
+
 </html>
