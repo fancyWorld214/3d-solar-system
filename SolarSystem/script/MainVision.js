@@ -189,7 +189,7 @@ export default class MainVision {
             //console.log(BABYLON.Tools.GetFps().toFixed() + " fps");
         };
         camera.fov = 0.5;
-        
+
         engine.runRenderLoop(function () {
             scene.render();
         }
@@ -241,9 +241,12 @@ export default class MainVision {
         function moveCameraLeft() {
             var direction = BABYLON.Vector3.Normalize(camera.getDirection(BABYLON.Axis.Z));
             var sideDirection = BABYLON.Vector3.Cross(direction, camera.upVector);
-            var cur_position = camera.position;
-            camera.position = new BABYLON.Vector3(cur_position.x + cameraSpeed * sideDirection.x,
-                cur_position.y + cameraSpeed * sideDirection.y, cur_position.z + cameraSpeed * sideDirection.z);
+
+            camera.direction = new BABYLON.Vector3(direction.x + cameraSpeed * sideDirection.x,
+                direction.y + cameraSpeed * sideDirection.y, direction.z + cameraSpeed * sideDirection.z);
+            var new_target = camera.direction + camera.position;
+            console.log("succeed");
+            camera.setTarget(new_target);
             // camera.position.addInPlace(sideDirection.scaleInPlace(-cameraSpeed));
         }
 
