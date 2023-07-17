@@ -9,3 +9,6 @@ javascript: 3D animation of own solar system rotation
 Install live server plugin in vscode, and you can visit the index.html via localhost:port(default: 5000).
 ## Why do so?
 直接打开index.html会报因为加载图片而出现跨站访问错误（CORS）.代码比较老了，没有对应的更新。开启live server可以用http协议加载图片，不会出现跨站访问错误
+
+
+##lzz-MainVisionBranch
