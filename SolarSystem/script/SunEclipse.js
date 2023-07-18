@@ -132,9 +132,6 @@ export default class SunEclipse {
             var direction = BABYLON.Vector3.Normalize(
                 earth.position.subtract(sun.position)
             );
-            //console.log(`earth.position: ${earth.position}`)
-            //console.log(`camera: ${camera}`)
-            // Set the camera's position relative to the Earth (adjust this value based on your desired camera distance)
             camera.position = earth.position.add(direction.scale(0.8));
 
             // Set the camera's target to always look at the Sun

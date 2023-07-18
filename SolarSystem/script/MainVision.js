@@ -13,9 +13,9 @@ export default class MainVision {
         var venus_diameter = 0.35 * diameterScale;
         var earth_diameter = 0.5 * diameterScale;
         var moon_diameter = 0.15 * diameterScale;
-        var mars_diameter = 0.4* diameterScale;
+        var mars_diameter = 0.4 * diameterScale;
         var jupiter_diameter = 0.9 * diameterScale;
-        var saturn_diameter = 0.85 *diameterScale;
+        var saturn_diameter = 0.85 * diameterScale;
         var uranus_diameter = 0.65 * diameterScale;
         var neptune_diameter = 0.6 * diameterScale;
 
@@ -120,7 +120,7 @@ export default class MainVision {
         material9.emissiveColor = new BABYLON.Color3(0.5, 0.5, 0.5);
         material9.diffuseTexture.vScale = -1;
         material9.diffuseTexture.uScale = -1;
-        
+
 
         // 创建光环材质
         var ringMaterial = new BABYLON.StandardMaterial("RingMaterial", scene);
@@ -152,10 +152,10 @@ export default class MainVision {
             arc: 2 * Math.PI, // 圆环的完整弧度
             updatable: false
         }, scene);
-        
+
         ring.material = ringMaterial;
         disc.isInFrustum = function () { // 设置遮罩的裁剪
-            var frustumPlanes = scene._frustumPlanes;        
+            var frustumPlanes = scene._frustumPlanes;
             for (var i = 0; i < 6; i++) {
                 if (frustumPlanes[i].dotCoordinate(ring.absolutePosition) < 0) {
                     return false;
@@ -163,14 +163,14 @@ export default class MainVision {
             }
             return true;
         };
-        
+
         // 将光环模型旋转90度，使其变为横向
         ring.rotation.x = Math.PI / 2;
         disc.rotation.x = Math.PI / 2;
         disc.parent = saturn;
         ring.parent = saturn; // 将遮罩设置为土星模型的子网格
 
-        
+
 
 
 
@@ -258,7 +258,7 @@ export default class MainVision {
         saturn.position.y = earth.position.y;
         saturn.position.z = earth.position.z;
 
-        ring.position = new BABYLON.Vector3(0, 0, 0); 
+        ring.position = new BABYLON.Vector3(0, 0, 0);
 
         // Set initial uranus position
         uranus.position.x = uranus_distance;
@@ -269,7 +269,7 @@ export default class MainVision {
         var earthSpeed = 0;
         var moonSpeed = 0;
         var earthOrbitRadius = earth_distance;
-        var moonOrbitRadius = earth_distance-moon_distance;
+        var moonOrbitRadius = earth_distance - moon_distance;
         scene.beforeRender = function () {
             var incremental = false;
             var incremental_buggy = false;
@@ -282,16 +282,16 @@ export default class MainVision {
 
             var min2ms = 1000.0 * 60.0;        // milliseconds in minutes
             var einUmlauf = 1 * min2ms;
-          
-            var rotateScale=365;
+
+            var rotateScale = 365;
 
             // Update earth position and rotation
-            earthSpeed = ((elapsed_t ) * 360) / einUmlauf;
-            var radians = 10*earthSpeed * Math.PI / 180;
+            earthSpeed = ((elapsed_t) * 360) / einUmlauf;
+            var radians = 10 * earthSpeed * Math.PI / 180;
             earth.position.x = Math.cos(radians) * earthOrbitRadius;
             earth.position.z = Math.sin(radians) * earthOrbitRadius;
 
-            earth.rotation.y = ((elapsed_t) * (360 /365.24)*rotateScale) / min2ms / 1000;
+            earth.rotation.y = ((elapsed_t) * (360 / 365.24) * rotateScale) / min2ms / 1000;
 
 
             // Update moon position and rotation
@@ -299,39 +299,39 @@ export default class MainVision {
             var moonradians = moonSpeed * Math.PI / 180;
             moon.position.x = (Math.cos(moonradians) * moonOrbitRadius) + earth.position.x;
             moon.position.z = (Math.sin(moonradians) * moonOrbitRadius) + earth.position.z;
-            moon.rotation.y = ((elapsed_t) * (360 /27.3)*rotateScale) / min2ms;
+            moon.rotation.y = ((elapsed_t) * (360 / 27.3) * rotateScale) / min2ms;
 
             // Update other planets position and rotation
-            mercury.position.x = Math.cos(radians * 365/87) * mercury_distance;
-            mercury.position.z = Math.sin(radians * 365/87) * mercury_distance;
-            mercury.rotation.y = ((elapsed_t) * (360 /58)*rotateScale) / min2ms / 1000;
+            mercury.position.x = Math.cos(radians * 365 / 87) * mercury_distance;
+            mercury.position.z = Math.sin(radians * 365 / 87) * mercury_distance;
+            mercury.rotation.y = ((elapsed_t) * (360 / 58) * rotateScale) / min2ms / 1000;
 
-            venus.position.x = Math.cos(radians * 365/224) * venus_distance;
-            venus.position.z = Math.sin(radians * 365/224) * venus_distance;
-            venus.rotation.y = ((elapsed_t) * (360 /243)*rotateScale) / min2ms / 1000;
+            venus.position.x = Math.cos(radians * 365 / 224) * venus_distance;
+            venus.position.z = Math.sin(radians * 365 / 224) * venus_distance;
+            venus.rotation.y = ((elapsed_t) * (360 / 243) * rotateScale) / min2ms / 1000;
 
-            mars.position.x = Math.cos(radians * 365/686) * mars_distance;
-            mars.position.z = Math.sin(radians * 365/686) * mars_distance;
-            mars.rotation.y = ((elapsed_t) * (360 /1)*rotateScale) / min2ms / 1000;
+            mars.position.x = Math.cos(radians * 365 / 686) * mars_distance;
+            mars.position.z = Math.sin(radians * 365 / 686) * mars_distance;
+            mars.rotation.y = ((elapsed_t) * (360 / 1) * rotateScale) / min2ms / 1000;
 
-            jupiter.position.x = Math.cos(radians * 365/4332) * jupiter_distance;
-            jupiter.position.z = Math.sin(radians * 356/4332) * jupiter_distance;
-            jupiter.rotation.y = ((elapsed_t) * (360 /0.41)*rotateScale) / min2ms / 1000;
+            jupiter.position.x = Math.cos(radians * 365 / 4332) * jupiter_distance;
+            jupiter.position.z = Math.sin(radians * 356 / 4332) * jupiter_distance;
+            jupiter.rotation.y = ((elapsed_t) * (360 / 0.41) * rotateScale) / min2ms / 1000;
 
-            saturn.position.x = Math.cos(radians /29.5) * saturn_distance;
-            saturn.position.z = Math.sin(radians /29.5) * saturn_distance;
-            saturn.rotation.y = ((elapsed_t) * (360 /0.426)*rotateScale) / min2ms / 1000;
+            saturn.position.x = Math.cos(radians / 29.5) * saturn_distance;
+            saturn.position.z = Math.sin(radians / 29.5) * saturn_distance;
+            saturn.rotation.y = ((elapsed_t) * (360 / 0.426) * rotateScale) / min2ms / 1000;
 
-            ring.position = new BABYLON.Vector3(0, 0, 0); 
+            ring.position = new BABYLON.Vector3(0, 0, 0);
             disc.position = new BABYLON.Vector3(0, 0, 0);
 
-            uranus.position.x = Math.cos(radians /84) * uranus_distance;
-            uranus.position.z = Math.sin(radians /84) * uranus_distance;
-            uranus.rotation.y = ((elapsed_t) * (360 /0.426)*rotateScale) / min2ms / 1000;
+            uranus.position.x = Math.cos(radians / 84) * uranus_distance;
+            uranus.position.z = Math.sin(radians / 84) * uranus_distance;
+            uranus.rotation.y = ((elapsed_t) * (360 / 0.426) * rotateScale) / min2ms / 1000;
 
-            neptune.position.x = Math.cos(radians /164) * neptune_distance;
-            neptune.position.z = Math.sin(radians /164) * neptune_distance;
-            neptune.rotation.y = ((elapsed_t) * (360 /0.6713)*rotateScale) / min2ms / 1000;
+            neptune.position.x = Math.cos(radians / 164) * neptune_distance;
+            neptune.position.z = Math.sin(radians / 164) * neptune_distance;
+            neptune.rotation.y = ((elapsed_t) * (360 / 0.6713) * rotateScale) / min2ms / 1000;
 
             //console.log("Earth position: " + moon.position);
             //console.log(BABYLON.Tools.GetFps().toFixed() + " fps");
@@ -345,67 +345,132 @@ export default class MainVision {
         }
         );
     }
+
     setUpCameraMovingPattern(camera, scene) { // Define the movement speed for the camera
         var cameraSpeed = 0.1;
-
+        var rotateSpeed = 0.01;
         // Add event listeners to detect key presses
+
+        var keys = {};
+
         window.addEventListener("keydown", function (event) {
             var keyCode = event.keyCode;
 
+            // Store the pressed key in the 'keys' object
+            keys[keyCode] = true;
+
             // Move forward (W key)
-            if (keyCode === 87) {
+            if (keys[87]) { // W key
+                if (keys[16]) {
+                    cameraSpeed = 3;
+                }
+                else {
+                    cameraSpeed = 0.5;
+                }
                 moveCameraForward();
             }
 
             // Move backward (S key)
-            if (keyCode === 83) {
+            if (keys[83]) { // S key
+                if (keys[16]) {
+                    cameraSpeed = 3;
+                }
+                else {
+                    cameraSpeed = 0.5;
+                }
                 moveCameraBackward();
             }
 
             // Move left (A key)
-            if (keyCode === 65) {
+            if (keys[65]) { // A key
+                if (keys[16]) {
+                    rotateSpeed = 0.05;
+                }
+                else {
+                    rotateSpeed = 0.01;
+                }
                 moveCameraLeft();
             }
 
             // Move right (D key)
-            if (keyCode === 68) {
+            if (keys[68]) { // D key
+                if (keys[16]) {
+                    rotateSpeed = 0.05;
+                }
+                else {
+                    rotateSpeed = 0.01;
+                }
                 moveCameraRight();
+            }
+
+            // Move towards Sun (Tab key)
+            if (keys[9]) {
+                moveCameraTowardsSun();
             }
         });
 
-        // Helper functions to move the camera
+        window.addEventListener("keyup", function (event) {
+            var keyCode = event.keyCode;
+
+            // Remove the released key from the 'keys' object
+            delete keys[keyCode];
+        });
+
         function moveCameraForward() {
             var direction = BABYLON.Vector3.Normalize(camera.getDirection(BABYLON.Axis.Z));
             var cur_position = camera.position;
-            camera.position = new BABYLON.Vector3(cur_position.x + cameraSpeed * direction.x,
+            var new_position = new BABYLON.Vector3(cur_position.x + cameraSpeed * direction.x,
                 cur_position.y + cameraSpeed * direction.y, cur_position.z + cameraSpeed * direction.z);
+            camera.position = new_position;
+            var new_target = new BABYLON.Vector3(cur_position.x + direction.x,
+                cur_position.y + direction.y, cur_position.z + direction.z);
+            camera.setTarget(new_target);
         }
 
         function moveCameraBackward() {
             var direction = BABYLON.Vector3.Normalize(camera.getDirection(BABYLON.Axis.Z));
             var cur_position = camera.position;
-            camera.position = new BABYLON.Vector3(cur_position.x - cameraSpeed * direction.x,
+            var new_position = new BABYLON.Vector3(cur_position.x - cameraSpeed * direction.x,
                 cur_position.y - cameraSpeed * direction.y, cur_position.z - cameraSpeed * direction.z);
+            camera.position = new_position;
+            var new_target = new BABYLON.Vector3(cur_position.x + direction.x,
+                cur_position.y + direction.y, cur_position.z + direction.z);
+            camera.setTarget(new_target);
         }
 
         function moveCameraLeft() {
             var direction = BABYLON.Vector3.Normalize(camera.getDirection(BABYLON.Axis.Z));
             var sideDirection = BABYLON.Vector3.Cross(direction, camera.upVector);
-
-            camera.direction = new BABYLON.Vector3(direction.x + cameraSpeed * sideDirection.x,
-                direction.y + cameraSpeed * sideDirection.y, direction.z + cameraSpeed * sideDirection.z);
-            var new_target = camera.direction + camera.position;
-            console.log("succeed");
+            var cur_direction = new BABYLON.Vector3(direction.x + rotateSpeed * sideDirection.x,
+                direction.y + rotateSpeed * sideDirection.y, direction.z + rotateSpeed * sideDirection.z);
+            camera.direction = cur_direction;
+            var cur_position = camera.position;
+            var new_target = new BABYLON.Vector3(cur_position.x + cur_direction.x,
+                cur_position.y + cur_direction.y, cur_position.z + cur_direction.z);
             camera.setTarget(new_target);
-            // camera.position.addInPlace(sideDirection.scaleInPlace(-cameraSpeed));
+            //console.log(camera.getDirection(BABYLON.Axis.Z));
         }
 
         function moveCameraRight() {
             var direction = BABYLON.Vector3.Normalize(camera.getDirection(BABYLON.Axis.Z));
             var sideDirection = BABYLON.Vector3.Cross(direction, camera.upVector);
+            var cur_direction = new BABYLON.Vector3(direction.x - rotateSpeed * sideDirection.x,
+                direction.y - rotateSpeed * sideDirection.y, direction.z - rotateSpeed * sideDirection.z);
+            camera.direction = cur_direction;
             var cur_position = camera.position;
-            camera.position = new BABYLON.Vector3(cur_position.x - cameraSpeed * sideDirection.x,
-                cur_position.y - cameraSpeed * sideDirection.y, cur_position.z - cameraSpeed * sideDirection.z);
+            var new_target = new BABYLON.Vector3(cur_position.x + cur_direction.x,
+                cur_position.y + cur_direction.y, cur_position.z + cur_direction.z);
+            camera.setTarget(new_target);
+            //console.log(camera.getDirection(BABYLON.Axis.Z));
+        }
+
+        function moveCameraTowardsSun() {
+            var cur_position = camera.position;
+            var direction = new BABYLON.Vector3(-cur_position.x, -cur_position.y, -cur_position.z);
+            var new_direction = BABYLON.Vector3.Normalize(direction);
+            var new_target = new BABYLON.Vector3(cur_position.x + new_direction.x,
+                cur_position.y + new_direction.y, cur_position.z + new_direction.z);
+            camera.setTarget(new_target);
         }
     }
     Building() {
@@ -423,14 +488,3 @@ export default class MainVision {
     }
 
 }
-
-
-
-
-
-
-
-
-
-
-
