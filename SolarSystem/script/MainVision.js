@@ -403,8 +403,8 @@ export default class MainVision {
                 moveCameraRight();
             }
 
-            // Move towards Sun (Home key)
-            if (keys[36]) {
+            // Move towards Sun (Tab key)
+            if (keys[9]) {
                 moveCameraTowardsSun();
             }
         });
@@ -421,17 +421,10 @@ export default class MainVision {
             var cur_position = camera.position;
             var new_position = new BABYLON.Vector3(cur_position.x + cameraSpeed * direction.x,
                 cur_position.y + cameraSpeed * direction.y, cur_position.z + cameraSpeed * direction.z);
-            console.log(cameraSpeed);
-            var sun_position = new BABYLON.Vector3(0, 0, 0);
-            var new_distance = BABYLON.Vector3.Distance(new_position, sun_position);
-            var sun_diameter = 2.5;
-            if (new_distance > 0.55 * sun_diameter) {
-                camera.position = new_position;
-                var new_target = new BABYLON.Vector3(cur_position.x + direction.x,
-                    cur_position.y + direction.y, cur_position.z + direction.z);
-                camera.setTarget(new_target);
-            }
-
+            camera.position = new_position;
+            var new_target = new BABYLON.Vector3(cur_position.x + direction.x,
+                cur_position.y + direction.y, cur_position.z + direction.z);
+            camera.setTarget(new_target);
         }
 
         function moveCameraBackward() {
@@ -439,16 +432,10 @@ export default class MainVision {
             var cur_position = camera.position;
             var new_position = new BABYLON.Vector3(cur_position.x - cameraSpeed * direction.x,
                 cur_position.y - cameraSpeed * direction.y, cur_position.z - cameraSpeed * direction.z);
-
-            var sun_position = new BABYLON.Vector3(0, 0, 0);
-            var new_distance = BABYLON.Vector3.Distance(new_position, sun_position);
-            var sun_diameter = 2.5;
-            if (new_distance > 0.55 * sun_diameter) {
-                camera.position = new_position;
-                var new_target = new BABYLON.Vector3(cur_position.x + direction.x,
-                    cur_position.y + direction.y, cur_position.z + direction.z);
-                camera.setTarget(new_target);
-            }
+            camera.position = new_position;
+            var new_target = new BABYLON.Vector3(cur_position.x + direction.x,
+                cur_position.y + direction.y, cur_position.z + direction.z);
+            camera.setTarget(new_target);
         }
 
         function moveCameraLeft() {
