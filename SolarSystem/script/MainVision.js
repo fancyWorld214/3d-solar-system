@@ -50,7 +50,7 @@ export default class MainVision {
         var moon = BABYLON.Mesh.CreateSphere("Moon", 20, moon_diameter, scene);
 
 
-        camera.parent = sun;
+
 
         //Bonusteil:2
         var mars = BABYLON.Mesh.CreateSphere("Mars", 40, mars_diameter, scene);
@@ -58,6 +58,138 @@ export default class MainVision {
         var saturn = BABYLON.Mesh.CreateSphere("Saturn", 50, saturn_diameter, scene);
         var uranus = BABYLON.Mesh.CreateSphere("Uranus", 60, uranus_diameter, scene);
         var neptune = BABYLON.Mesh.CreateSphere("Neptune", 60, neptune_diameter, scene);
+
+        // 创建一个地球轨道
+        var earth_torusRadius = earth_distance; // 圆环的半径，根据需要调整
+        var mercury_torusRadius = mercury_distance; // 圆环的半径，根据需要调整
+        var venus_torusRadius = venus_distance; // 圆环的半径，根据需要调整
+        var mars_torusRadius = mars_distance; // 圆环的半径，根据需要调整
+        var jupiter_torusRadius = jupiter_distance; // 圆环的半径，根据需要调整
+        var saturn_torusRadius = saturn_distance; // 圆环的半径，根据需要调整
+        var uranus_torusRadius = uranus_distance; // 圆环的半径，根据需要调整
+        var neptune_torusRadius = neptune_distance; // 圆环的半径，根据需要调整
+        var torusThickness = 0.1; // 圆环的厚度，根据需要调整
+        var torusSegments = 200; // 圆环的分段数，根据需要调整
+
+        // 使用 TorusBuilder 创建圆环轨道
+        var earth_torus = BABYLON.MeshBuilder.CreateTorus("orbit", {
+        diameter: earth_torusRadius * 2,
+        thickness: torusThickness,
+        tessellation: torusSegments,
+        }, scene);
+
+        // 创建一个月球轨道
+        var moon_torusRadius = earth_distance-moon_distance; // 圆环的半径，根据需要调整
+        var moon_torusThickness = 0.1; // 圆环的厚度，根据需要调整
+        var moon_torusSegments = 640; // 圆环的分段数，根据需要调整
+
+        // 使用 TorusBuilder 创建圆环轨道
+        var moon_torus = BABYLON.MeshBuilder.CreateTorus("orbit", {
+        diameter: moon_torusRadius * 2,
+        thickness: moon_torusThickness,
+        tessellation: moon_torusSegments,
+        }, scene);
+
+        // 定义倾斜角度（以弧度为单位）
+        var moon_tiltAngle = BABYLON.Tools.ToRadians(6.687); // 倾斜角度为 30 度，根据需要调整
+
+        // 倾斜月球轨道
+        moon_torus.rotation.x = moon_tiltAngle;
+
+        // 使用 TorusBuilder 创建圆环轨道
+        var mercury_torus = BABYLON.MeshBuilder.CreateTorus("orbit", {
+            diameter: mercury_torusRadius * 2,
+            thickness: torusThickness,
+            tessellation: torusSegments,
+            }, scene);
+        var venus_torus = BABYLON.MeshBuilder.CreateTorus("orbit", {
+            diameter: venus_torusRadius * 2,
+            thickness: torusThickness,
+            tessellation: torusSegments,
+            }, scene);
+        var mars_torus = BABYLON.MeshBuilder.CreateTorus("orbit", {
+            diameter: mars_torusRadius * 2,
+            thickness: torusThickness,
+            tessellation: torusSegments,
+            }, scene);
+        var jupiter_torus = BABYLON.MeshBuilder.CreateTorus("orbit", {
+            diameter: jupiter_torusRadius * 2,
+            thickness: torusThickness,
+            tessellation: torusSegments,
+            }, scene);
+        var saturn_torus = BABYLON.MeshBuilder.CreateTorus("orbit", {
+            diameter: saturn_torusRadius * 2,
+            thickness: torusThickness,
+            tessellation: torusSegments,
+            }, scene);
+        var uranus_torus = BABYLON.MeshBuilder.CreateTorus("orbit", {
+            diameter: uranus_torusRadius * 2,
+            thickness: torusThickness,
+            tessellation: torusSegments,
+            }, scene);
+        var neptune_torus = BABYLON.MeshBuilder.CreateTorus("orbit", {
+            diameter: neptune_torusRadius * 2,
+            thickness: torusThickness,
+            tessellation: torusSegments,
+            }, scene);
+                        
+                    
+        
+
+
+
+        // 设置轨道的材质和颜色
+        var torusMaterial = new BABYLON.StandardMaterial("orbitMaterial", scene);
+        torusMaterial.diffuseColor = new BABYLON.Color3(1, 1, 1); // 调整颜色
+        torusMaterial.emissiveColor = new BABYLON.Color3(1, 1, 1); // 调整颜色
+
+        earth_torus.material = torusMaterial;
+        moon_torus.material = torusMaterial;
+        mercury_torus.material = torusMaterial;
+        venus_torus.material = torusMaterial;
+        mars_torus.material = torusMaterial;
+        jupiter_torus.material = torusMaterial;
+        saturn_torus.material = torusMaterial;
+        uranus_torus.material = torusMaterial;
+        neptune_torus.material = torusMaterial;
+
+        // 定义倾斜角度（以弧度为单位）
+        var earth_tiltAngle = BABYLON.Tools.ToRadians(-22.5); // 倾斜角度为 22.5 度，根据需要调整
+
+        // 创建一个空的变换矩阵
+        var transformMatrix = BABYLON.Matrix.Identity();
+
+        // 将变换矩阵设置为倾斜矩阵
+        var tiltMatrix = BABYLON.Matrix.RotationX(earth_tiltAngle);
+        transformMatrix = tiltMatrix;
+
+        // 应用变换矩阵到球体
+        earth.setPivotMatrix(transformMatrix);
+
+        // 定义自转轴的偏移向量
+        var axisOffset = new BABYLON.Vector3(0, 1, 0); // 自转轴的偏移向量，根据需要调整
+
+        // 创建自转轴的变换矩阵
+        var rotationAxisMatrix = BABYLON.Matrix.Translation(axisOffset.x, axisOffset.y, axisOffset.z);
+
+        // 应用自转轴的变换矩阵到球体的自转
+        earth.rotationQuaternion = BABYLON.Quaternion.RotationAxis(new BABYLON.Vector3(0, 1, 0), earth_tiltAngle);
+        earth.bakeCurrentTransformIntoVertices();
+
+        // 创建自传轴的辅助线
+        var rotationAxisHelper = BABYLON.MeshBuilder.CreateLines("rotationAxisHelper", {
+            points: [
+            new BABYLON.Vector3(0, -10, 0), // 自转轴的起始点
+            new BABYLON.Vector3(0, 10, 0) // 自转轴的终点
+            ]
+        }, scene);
+        
+        // 设置自传轴的材质和颜色
+        var rotationAxisMaterial = new BABYLON.StandardMaterial("rotationAxisMaterial", scene);
+        rotationAxisMaterial.emissiveColor = new BABYLON.Color3(1, 0, 0); // 自传轴的颜色，根据需要调整
+        rotationAxisHelper.material = rotationAxisMaterial;
+  
+
 
 
         var material1 = new BABYLON.StandardMaterial("default1", scene);
@@ -285,21 +417,48 @@ export default class MainVision {
 
             var rotateScale = 365;
 
+            sun.rotation.y = -((elapsed_t) * (360 /24.47)*rotateScale) / min2ms / 1000;
+
             // Update earth position and rotation
             earthSpeed = ((elapsed_t) * 360) / einUmlauf;
             var radians = 10 * earthSpeed * Math.PI / 180;
             earth.position.x = Math.cos(radians) * earthOrbitRadius;
             earth.position.z = Math.sin(radians) * earthOrbitRadius;
+            moon_torus.position = earth.position;
 
-            earth.rotation.y = ((elapsed_t) * (360 / 365.24) * rotateScale) / min2ms / 1000;
+
+            // 定义倾斜角度（以弧度为单位）
+            var earth_tiltAngle = BABYLON.Tools.ToRadians(-22.5); // 倾斜角度为 22.5 度，根据需要调整
+            var moon_tiltAngle = BABYLON.Tools.ToRadians(-5.15);
+
+            // 定义自转速度
+            var rotationSpeed = 1/1000; // 自转速度，根据需要调整
+
+            // 在每个帧更新时执行的函数
+            scene.registerBeforeRender(function() {
+            // 获取经过的时间
+            var deltaTime = scene.getEngine().getDeltaTime();
+
+            // 计算自转角度增量，考虑倾斜角度
+            var rotationAngle = (rotationSpeed * deltaTime / 1000) * (2 * Math.PI); // 自转角度增量
+            var tiltedRotationAxis = new BABYLON.Vector3(0, Math.cos(earth_tiltAngle), -Math.sin(earth_tiltAngle)); // 经过倾斜的自转轴
+
+            // 绕倾斜自转轴进行自转
+            earth.rotate(tiltedRotationAxis, rotationAngle, BABYLON.Space.LOCAL);
+            });
+
+
+            earth.rotation.y = radians*365;
+
 
 
             // Update moon position and rotation
             moonSpeed = ((elapsed_t % (einUmlauf)) * 360) / (27.3 * (einUmlauf / 365.24));
             var moonradians = moonSpeed * Math.PI / 180;
             moon.position.x = (Math.cos(moonradians) * moonOrbitRadius) + earth.position.x;
-            moon.position.z = (Math.sin(moonradians) * moonOrbitRadius) + earth.position.z;
-            moon.rotation.y = ((elapsed_t) * (360 / 27.3) * rotateScale) / min2ms;
+            moon.position.z = (Math.sin(moonradians) * moonOrbitRadius)*Math.cos(-5.15* Math.PI / 180) + earth.position.z;
+            moon.position.y = (Math.sin(moonradians) * moonOrbitRadius)*Math.sin(-5.15* Math.PI / 180) + earth.position.y;
+            moon.rotation.y = radians*27+moon_tiltAngle;
 
             // Update other planets position and rotation
             mercury.position.x = Math.cos(radians * 365 / 87) * mercury_distance;
