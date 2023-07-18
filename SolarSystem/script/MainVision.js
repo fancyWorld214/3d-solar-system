@@ -239,7 +239,6 @@ export default class MainVision {
             var sun_position = new BABYLON.Vector3(0, 0, 0);
             var new_distance = BABYLON.Vector3.Distance(new_position, sun_position);
             var sun_diameter = 2.5;
-            console.log(new_distance);
             if (new_distance > 0.55 * sun_diameter) {
                 camera.position = new_position;
                 var new_target = new BABYLON.Vector3(cur_position.x + direction.x,
@@ -258,7 +257,6 @@ export default class MainVision {
             var sun_position = new BABYLON.Vector3(0, 0, 0);
             var new_distance = BABYLON.Vector3.Distance(new_position, sun_position);
             var sun_diameter = 2.5;
-            console.log(new_distance);
             if (new_distance > 0.55 * sun_diameter) {
                 camera.position = new_position;
                 var new_target = new BABYLON.Vector3(cur_position.x + direction.x,
