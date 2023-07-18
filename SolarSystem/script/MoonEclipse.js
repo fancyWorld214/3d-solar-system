@@ -6,22 +6,15 @@ export default class SunEclipse {
         this.camera = camera;
     }
     setUp(engine, scene, canvas, camera) {
-        //diameterScale
-        var diameterScale = 35;
-        var sun_diameter = 1.3927 * diameterScale;
-        var earth_diameter = 0.12756 * diameterScale;
-        var moon_diameter = 5;
-        var mars_diameter = 0.6794 * diameterScale;
-        var jupiter_diameter = 14.392 * diameterScale;
-        var neptune_diameter = 3.883 * diameterScale;
 
-        var distanceScale = 1;
-        // var earth_distance = 149.6 * distanceScale;
-        var earth_distance = 20;
-        var moon_distance = 0.3 * distanceScale;
-        var mars_distance = 227.9 * distanceScale;
-        var jupiter_distance = 778.6 * distanceScale;
-        var neptune_distance = 4495 * distanceScale;
+        var diameterScale = 20;
+        var sun_diameter = 1.0 * diameterScale;
+        var earth_diameter = 0.5 * diameterScale;
+        var moon_diameter = 0.15 * diameterScale;
+
+        var distanceScale = 800;
+        var earth_distance = 0.1 * distanceScale;
+        var moon_distance = 0.066 * distanceScale;
 
         var skybox = BABYLON.MeshBuilder.CreateBox("skyBox", { size: 1000.0 }, scene);
         var skyboxMaterial = new BABYLON.StandardMaterial("skyBox", scene);
@@ -32,9 +25,13 @@ export default class SunEclipse {
         skyboxMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
         skybox.material = skyboxMaterial;
 
-        var sun = BABYLON.Mesh.CreateSphere("Sun", sun_diameter, 0.65, scene);
+        /*var sun = BABYLON.Mesh.CreateSphere("Sun", sun_diameter, 0.65, scene);
         var earth = BABYLON.Mesh.CreateSphere("Earth", earth_diameter, 0.3, scene);
-        var moon = BABYLON.Mesh.CreateSphere("Moon", moon_diameter, 0.075, scene);
+        var moon = BABYLON.Mesh.CreateSphere("Moon", moon_diameter, 0.075, scene);*/
+        var sun = BABYLON.Mesh.CreateSphere("Sun", 10, sun_diameter, scene);
+        var earth = BABYLON.Mesh.CreateSphere("Earth", 30, earth_diameter, scene);
+        var moon = BABYLON.Mesh.CreateSphere("Moon", 20, moon_diameter, scene);
+
 
         camera.parent = sun;
 
@@ -92,7 +89,7 @@ export default class SunEclipse {
         var earthSpeed = 0;
         var moonSpeed = 0;
         var earthOrbitRadius = earth_distance;
-        var moonOrbitRadius = moon_distance;
+        var moonOrbitRadius = earth_distance - moon_distance;
         scene.beforeRender = function () {
             var incremental = false;
             var incremental_buggy = false;
@@ -122,25 +119,18 @@ export default class SunEclipse {
                 Math.cos(moonradians) * moonOrbitRadius + earth.position.x;
             moon.position.z =
                 Math.sin(moonradians) * moonOrbitRadius + earth.position.z;
-
             moon.rotation.y = (elapsed_t * (360 * 27.3)) / min2ms;
         };
 
-        camera.fov = 0.5;
+        camera.fov = 1.0;
         function updateCamera() {
-            /*const opposite = new Vector3(
-                -sun.position.x,
-                -sun.position.y,
-                -sun.position.z
-            );*/
-            var direction = BABYLON.Vector3.Normalize(
-                earth.position.subtract(moon.position)
-            );
             //console.log(`earth.position: ${earth.position}`)
             //console.log(`camera: ${camera}`)
-            // Set the camera's position relative to the Earth (adjust this value based on your desired camera distance)
-            camera.position = earth.position.add(direction.scale(0.8));
+            // Calculate the midpoint between Earth and moon
+            var midpoint = BABYLON.Vector3.Lerp(earth.position, moon.position, 0.5);
 
+            // Set the camera's position to the midpoint
+            camera.position = midpoint;
             // Set the camera's target to always look at the Sun
             camera.setTarget(moon.position);
         }
