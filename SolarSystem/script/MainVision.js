@@ -350,42 +350,78 @@ export default class MainVision {
         var cameraSpeed = 0.1;
         var rotateSpeed = 0.01;
         // Add event listeners to detect key presses
+
+        var keys = {};
+
         window.addEventListener("keydown", function (event) {
             var keyCode = event.keyCode;
 
+            // Store the pressed key in the 'keys' object
+            keys[keyCode] = true;
+
             // Move forward (W key)
-            if (keyCode === 87) {
+            if (keys[87]) { // W key
+                if (keys[16]) {
+                    cameraSpeed = 3;
+                }
+                else {
+                    cameraSpeed = 0.5;
+                }
                 moveCameraForward();
             }
 
             // Move backward (S key)
-            if (keyCode === 83) {
+            if (keys[83]) { // S key
+                if (keys[16]) {
+                    cameraSpeed = 3;
+                }
+                else {
+                    cameraSpeed = 0.5;
+                }
                 moveCameraBackward();
             }
 
             // Move left (A key)
-            if (keyCode === 65) {
+            if (keys[65]) { // A key
+                if (keys[16]) {
+                    rotateSpeed = 0.05;
+                }
+                else {
+                    rotateSpeed = 0.01;
+                }
                 moveCameraLeft();
             }
 
             // Move right (D key)
-            if (keyCode === 68) {
+            if (keys[68]) { // D key
+                if (keys[16]) {
+                    rotateSpeed = 0.05;
+                }
+                else {
+                    rotateSpeed = 0.01;
+                }
                 moveCameraRight();
             }
 
-            // Move right (Home key)
-            if (keyCode === 36) {
+            // Move towards Sun (Home key)
+            if (keys[36]) {
                 moveCameraTowardsSun();
             }
         });
 
-        // Helper functions to move the camera
+        window.addEventListener("keyup", function (event) {
+            var keyCode = event.keyCode;
+
+            // Remove the released key from the 'keys' object
+            delete keys[keyCode];
+        });
+
         function moveCameraForward() {
             var direction = BABYLON.Vector3.Normalize(camera.getDirection(BABYLON.Axis.Z));
             var cur_position = camera.position;
             var new_position = new BABYLON.Vector3(cur_position.x + cameraSpeed * direction.x,
                 cur_position.y + cameraSpeed * direction.y, cur_position.z + cameraSpeed * direction.z);
-
+            console.log(cameraSpeed);
             var sun_position = new BABYLON.Vector3(0, 0, 0);
             var new_distance = BABYLON.Vector3.Distance(new_position, sun_position);
             var sun_diameter = 2.5;
