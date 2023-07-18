@@ -195,9 +195,10 @@ export default class MainVision {
         }
         );
     }
+
     setUpCameraMovingPattern(camera, scene) { // Define the movement speed for the camera
         var cameraSpeed = 0.1;
-
+        var rotateSpeed = 0.01;
         // Add event listeners to detect key presses
         window.addEventListener("keydown", function (event) {
             var keyCode = event.keyCode;
@@ -221,41 +222,84 @@ export default class MainVision {
             if (keyCode === 68) {
                 moveCameraRight();
             }
+
+            // Move right (Home key)
+            if (keyCode === 36) {
+                moveCameraTowardsSun();
+            }
         });
 
         // Helper functions to move the camera
         function moveCameraForward() {
             var direction = BABYLON.Vector3.Normalize(camera.getDirection(BABYLON.Axis.Z));
             var cur_position = camera.position;
-            camera.position = new BABYLON.Vector3(cur_position.x + cameraSpeed * direction.x,
+            var new_position = new BABYLON.Vector3(cur_position.x + cameraSpeed * direction.x,
                 cur_position.y + cameraSpeed * direction.y, cur_position.z + cameraSpeed * direction.z);
+
+            var sun_position = new BABYLON.Vector3(0, 0, 0);
+            var new_distance = BABYLON.Vector3.Distance(new_position, sun_position);
+            var sun_diameter = 2.5;
+            console.log(new_distance);
+            if (new_distance > 0.55 * sun_diameter) {
+                camera.position = new_position;
+                var new_target = new BABYLON.Vector3(cur_position.x + direction.x,
+                    cur_position.y + direction.y, cur_position.z + direction.z);
+                camera.setTarget(new_target);
+            }
+
         }
 
         function moveCameraBackward() {
             var direction = BABYLON.Vector3.Normalize(camera.getDirection(BABYLON.Axis.Z));
             var cur_position = camera.position;
-            camera.position = new BABYLON.Vector3(cur_position.x - cameraSpeed * direction.x,
+            var new_position = new BABYLON.Vector3(cur_position.x - cameraSpeed * direction.x,
                 cur_position.y - cameraSpeed * direction.y, cur_position.z - cameraSpeed * direction.z);
+
+            var sun_position = new BABYLON.Vector3(0, 0, 0);
+            var new_distance = BABYLON.Vector3.Distance(new_position, sun_position);
+            var sun_diameter = 2.5;
+            console.log(new_distance);
+            if (new_distance > 0.55 * sun_diameter) {
+                camera.position = new_position;
+                var new_target = new BABYLON.Vector3(cur_position.x + direction.x,
+                    cur_position.y + direction.y, cur_position.z + direction.z);
+                camera.setTarget(new_target);
+            }
         }
 
         function moveCameraLeft() {
             var direction = BABYLON.Vector3.Normalize(camera.getDirection(BABYLON.Axis.Z));
             var sideDirection = BABYLON.Vector3.Cross(direction, camera.upVector);
-
-            camera.direction = new BABYLON.Vector3(direction.x + cameraSpeed * sideDirection.x,
-                direction.y + cameraSpeed * sideDirection.y, direction.z + cameraSpeed * sideDirection.z);
-            var new_target = camera.direction + camera.position;
-            console.log("succeed");
+            var cur_direction = new BABYLON.Vector3(direction.x + rotateSpeed * sideDirection.x,
+                direction.y + rotateSpeed * sideDirection.y, direction.z + rotateSpeed * sideDirection.z);
+            camera.direction = cur_direction;
+            var cur_position = camera.position;
+            var new_target = new BABYLON.Vector3(cur_position.x + cur_direction.x,
+                cur_position.y + cur_direction.y, cur_position.z + cur_direction.z);
             camera.setTarget(new_target);
-            // camera.position.addInPlace(sideDirection.scaleInPlace(-cameraSpeed));
+            //console.log(camera.getDirection(BABYLON.Axis.Z));
         }
 
         function moveCameraRight() {
             var direction = BABYLON.Vector3.Normalize(camera.getDirection(BABYLON.Axis.Z));
             var sideDirection = BABYLON.Vector3.Cross(direction, camera.upVector);
+            var cur_direction = new BABYLON.Vector3(direction.x - rotateSpeed * sideDirection.x,
+                direction.y - rotateSpeed * sideDirection.y, direction.z - rotateSpeed * sideDirection.z);
+            camera.direction = cur_direction;
             var cur_position = camera.position;
-            camera.position = new BABYLON.Vector3(cur_position.x - cameraSpeed * sideDirection.x,
-                cur_position.y - cameraSpeed * sideDirection.y, cur_position.z - cameraSpeed * sideDirection.z);
+            var new_target = new BABYLON.Vector3(cur_position.x + cur_direction.x,
+                cur_position.y + cur_direction.y, cur_position.z + cur_direction.z);
+            camera.setTarget(new_target);
+            //console.log(camera.getDirection(BABYLON.Axis.Z));
+        }
+
+        function moveCameraTowardsSun() {
+            var cur_position = camera.position;
+            var direction = new BABYLON.Vector3(-cur_position.x, -cur_position.y, -cur_position.z);
+            var new_direction = BABYLON.Vector3.Normalize(direction);
+            var new_target = new BABYLON.Vector3(cur_position.x + new_direction.x,
+                cur_position.y + new_direction.y, cur_position.z + new_direction.z);
+            camera.setTarget(new_target);
         }
     }
     Building() {
