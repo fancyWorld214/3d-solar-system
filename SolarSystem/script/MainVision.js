@@ -519,7 +519,7 @@ export default class MainVision {
             //console.log(BABYLON.Tools.GetFps().toFixed() + " fps");
         };
         camera.fov = 0.8;
-        // camera.position = new BABYLON.Vector3(400, 150, 0);
+        camera.position = new BABYLON.Vector3(400, 150, 0);
 
 
         engine.runRenderLoop(function () {
