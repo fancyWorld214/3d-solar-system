@@ -7,6 +7,8 @@ export default class MainVision {
     }
     setUp(engine, scene, canvas, camera) {
 
+        
+
         var diameterScale = 20;
         var sun_diameter = 1.5 * diameterScale;
         var mercury_diameter = 0.3 * diameterScale;
@@ -133,67 +135,15 @@ export default class MainVision {
             tessellation: torusSegments,
             }, scene);
                         
-                    
+        var material0 = new BABYLON.StandardMaterial("default1", scene);
+        material0.diffuseTexture = new BABYLON.Texture("assets/earth.jpg", scene);
+        material0.specularColor = new BABYLON.Color3(0, 0, 0);
+        material0.emissiveColor = new BABYLON.Color3(0.8, 0.8, 0.8);
+        material0.diffuseTexture.vScale = -1;
+        material0.diffuseTexture.uScale = -1;
         
-
-
-
-        // 设置轨道的材质和颜色
-        var torusMaterial = new BABYLON.StandardMaterial("orbitMaterial", scene);
-        torusMaterial.diffuseColor = new BABYLON.Color3(1, 1, 1); // 调整颜色
-        torusMaterial.emissiveColor = new BABYLON.Color3(1, 1, 1); // 调整颜色
-
-        earth_torus.material = torusMaterial;
-        moon_torus.material = torusMaterial;
-        mercury_torus.material = torusMaterial;
-        venus_torus.material = torusMaterial;
-        mars_torus.material = torusMaterial;
-        jupiter_torus.material = torusMaterial;
-        saturn_torus.material = torusMaterial;
-        uranus_torus.material = torusMaterial;
-        neptune_torus.material = torusMaterial;
-
-        // 定义倾斜角度（以弧度为单位）
-        var earth_tiltAngle = BABYLON.Tools.ToRadians(-22.5); // 倾斜角度为 22.5 度，根据需要调整
-
-        // 创建一个空的变换矩阵
-        var transformMatrix = BABYLON.Matrix.Identity();
-
-        // 将变换矩阵设置为倾斜矩阵
-        var tiltMatrix = BABYLON.Matrix.RotationX(earth_tiltAngle);
-        transformMatrix = tiltMatrix;
-
-        // 应用变换矩阵到球体
-        earth.setPivotMatrix(transformMatrix);
-
-        // 定义自转轴的偏移向量
-        var axisOffset = new BABYLON.Vector3(0, 1, 0); // 自转轴的偏移向量，根据需要调整
-
-        // 创建自转轴的变换矩阵
-        var rotationAxisMatrix = BABYLON.Matrix.Translation(axisOffset.x, axisOffset.y, axisOffset.z);
-
-        // 应用自转轴的变换矩阵到球体的自转
-        earth.rotationQuaternion = BABYLON.Quaternion.RotationAxis(new BABYLON.Vector3(0, 1, 0), earth_tiltAngle);
-        earth.bakeCurrentTransformIntoVertices();
-
-        // 创建自传轴的辅助线
-        var rotationAxisHelper = BABYLON.MeshBuilder.CreateLines("rotationAxisHelper", {
-            points: [
-            new BABYLON.Vector3(0, -10, 0), // 自转轴的起始点
-            new BABYLON.Vector3(0, 10, 0) // 自转轴的终点
-            ]
-        }, scene);
-        
-        // 设置自传轴的材质和颜色
-        var rotationAxisMaterial = new BABYLON.StandardMaterial("rotationAxisMaterial", scene);
-        rotationAxisMaterial.emissiveColor = new BABYLON.Color3(1, 0, 0); // 自传轴的颜色，根据需要调整
-        rotationAxisHelper.material = rotationAxisMaterial;
-  
-
-
-
         var material1 = new BABYLON.StandardMaterial("default1", scene);
-        material1.diffuseTexture = new BABYLON.Texture("assets/earth.jpg", scene);
+        material1.diffuseTexture = new BABYLON.Texture("assets/earthmap.jpg", scene);
         material1.specularColor = new BABYLON.Color3(0, 0, 0);
         material1.emissiveColor = new BABYLON.Color3(0.8, 0.8, 0.8);
         material1.diffuseTexture.vScale = -1;
@@ -316,7 +266,7 @@ export default class MainVision {
 
 
 
-        earth.material = material1;
+        
         moon.material = material2;
         sun.material = material3;
         mars.material = material4;
@@ -327,6 +277,83 @@ export default class MainVision {
         uranus.material = material9;
         saturn.material = material10;
         ring.material = ringMaterial;
+    
+        
+        // 设置轨道的材质和颜色
+        var torusMaterial = new BABYLON.StandardMaterial("orbitMaterial", scene);
+        torusMaterial.diffuseColor = new BABYLON.Color3(1, 1, 1); // 调整颜色
+        torusMaterial.emissiveColor = new BABYLON.Color3(1, 1, 1); // 调整颜色
+
+        earth_torus.material = torusMaterial;
+        moon_torus.material = torusMaterial;
+        mercury_torus.material = torusMaterial;
+        venus_torus.material = torusMaterial;
+        mars_torus.material = torusMaterial;
+        jupiter_torus.material = torusMaterial;
+        saturn_torus.material = torusMaterial;
+        uranus_torus.material = torusMaterial;
+        neptune_torus.material = torusMaterial;
+
+        // 定义倾斜角度（以弧度为单位）
+        var earth_tiltAngle = BABYLON.Tools.ToRadians(-22.5); // 倾斜角度为 22.5 度，根据需要调整
+
+        // 创建一个空的变换矩阵
+        var transformMatrix = BABYLON.Matrix.Identity();
+
+        // 将变换矩阵设置为倾斜矩阵
+        var tiltMatrix = BABYLON.Matrix.RotationX(earth_tiltAngle);
+        transformMatrix = tiltMatrix;
+
+        // 应用变换矩阵到球体
+        earth.setPivotMatrix(transformMatrix);
+
+        // 定义自转轴的偏移向量
+        var axisOffset = new BABYLON.Vector3(0, 1, 0); // 自转轴的偏移向量，根据需要调整
+
+        // 创建自转轴的变换矩阵
+        var rotationAxisMatrix = BABYLON.Matrix.Translation(axisOffset.x, axisOffset.y, axisOffset.z);
+
+        // 应用自转轴的变换矩阵到球体的自转
+        earth.rotationQuaternion = BABYLON.Quaternion.RotationAxis(new BABYLON.Vector3(0, 1, 0), earth_tiltAngle);
+        earth.bakeCurrentTransformIntoVertices();
+
+        // 根据倾斜角度设置贴图的偏移
+        material1.diffuseTexture.uOffset = -Math.sin(earth_tiltAngle); // 在 U 方向上的偏移
+        material1.diffuseTexture.vOffset = Math.cos(earth_tiltAngle); // 在 V 方向上的偏移
+
+        material0.diffuseTexture.uOffset = -Math.sin(earth_tiltAngle); // 在 U 方向上的偏移
+        material0.diffuseTexture.vOffset = Math.cos(earth_tiltAngle); // 在 V 方向上的偏移
+        earth.material = material0;
+        // 获取按钮元素
+        var changebutton = document.getElementById("ChangeButton");
+
+        // 添加点击事件监听器
+        changebutton.addEventListener("click", function() {
+            // 当按钮被点击时执行的操作
+            if(earth.material==material0)
+                earth.material=material1;
+            else
+                earth.material=material0; 
+
+        });
+
+        // 创建自传轴的辅助线
+        var rotationAxisHelper = BABYLON.MeshBuilder.CreateLines("rotationAxisHelper", {
+            points: [
+            new BABYLON.Vector3(0, -10, 0), // 自转轴的起始点
+            new BABYLON.Vector3(0, 10, 0) // 自转轴的终点
+            ]
+        }, scene);
+        
+        // 设置自传轴的材质和颜色
+        var rotationAxisMaterial = new BABYLON.StandardMaterial("rotationAxisMaterial", scene);
+        rotationAxisMaterial.emissiveColor = new BABYLON.Color3(1, 0, 0); // 自传轴的颜色，根据需要调整
+        rotationAxisHelper.material = rotationAxisMaterial;
+  
+
+
+
+        
 
 
         var light = new BABYLON.PointLight("dir01", new BABYLON.Vector3(-0.0, -0.0, 0.0), scene);
@@ -428,27 +455,23 @@ export default class MainVision {
 
 
             // 定义倾斜角度（以弧度为单位）
-            var earth_tiltAngle = BABYLON.Tools.ToRadians(-22.5); // 倾斜角度为 22.5 度，根据需要调整
+            var earth_tiltAngle = BABYLON.Tools.ToRadians(22.5); // 倾斜角度为 22.5 度，根据需要调整
             var moon_tiltAngle = BABYLON.Tools.ToRadians(-5.15);
 
             // 定义自转速度
             var rotationSpeed = 1/1000; // 自转速度，根据需要调整
 
-            // 在每个帧更新时执行的函数
-            scene.registerBeforeRender(function() {
-            // 获取经过的时间
-            var deltaTime = scene.getEngine().getDeltaTime();
-
             // 计算自转角度增量，考虑倾斜角度
-            var rotationAngle = (rotationSpeed * deltaTime / 1000) * (2 * Math.PI); // 自转角度增量
-            var tiltedRotationAxis = new BABYLON.Vector3(0, Math.cos(earth_tiltAngle), -Math.sin(earth_tiltAngle)); // 经过倾斜的自转轴
+            var rotationSpeed = 0.5; // 自转角速度，根据需要调整
+            scene.onBeforeRenderObservable.add(function () {
+                var deltaTime = scene.getEngine().getDeltaTime();
+                var rotationAngle = (rotationSpeed * deltaTime / 1000) * (2 * Math.PI); // 自转角度增量
+                var tiltedRotationAxis = new BABYLON.Vector3(0, Math.cos(earth_tiltAngle), -Math.sin(earth_tiltAngle)); // 经过倾斜的自转轴
 
-            // 绕倾斜自转轴进行自转
-            earth.rotate(tiltedRotationAxis, rotationAngle, BABYLON.Space.LOCAL);
+                // 绕倾斜自转轴进行自转
+                earth.rotate(tiltedRotationAxis, rotationAngle, BABYLON.Space.LOCAL);
             });
 
-
-            earth.rotation.y = radians*365;
 
 
 
@@ -496,7 +519,7 @@ export default class MainVision {
             //console.log(BABYLON.Tools.GetFps().toFixed() + " fps");
         };
         camera.fov = 0.8;
-        camera.position = new BABYLON.Vector3(400, 150, 0);
+        // camera.position = new BABYLON.Vector3(400, 150, 0);
 
 
         engine.runRenderLoop(function () {
