@@ -9,7 +9,7 @@ export default class SunEclipse {
 
         var diameterScale = 20;
         var sun_diameter = 1.0 * diameterScale;
-        var earth_diameter = 0.5 * diameterScale;
+        var earth_diameter = 0.2 * diameterScale;
         var moon_diameter = 0.15 * diameterScale;
 
         var distanceScale = 800;
@@ -25,13 +25,9 @@ export default class SunEclipse {
         skyboxMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
         skybox.material = skyboxMaterial;
 
-        /*var sun = BABYLON.Mesh.CreateSphere("Sun", sun_diameter, 0.65, scene);
-        var earth = BABYLON.Mesh.CreateSphere("Earth", earth_diameter, 0.3, scene);
-        var moon = BABYLON.Mesh.CreateSphere("Moon", moon_diameter, 0.075, scene);*/
         var sun = BABYLON.Mesh.CreateSphere("Sun", 10, sun_diameter, scene);
         var earth = BABYLON.Mesh.CreateSphere("Earth", 30, earth_diameter, scene);
         var moon = BABYLON.Mesh.CreateSphere("Moon", 20, moon_diameter, scene);
-
 
         camera.parent = sun;
 
@@ -61,12 +57,13 @@ export default class SunEclipse {
         var light = new BABYLON.PointLight("dir01", new BABYLON.Vector3(-0.0, -0.0, 0.0), scene);
         light.diffuse = new BABYLON.Color3(1.0, 1.0, 1.0);
         light.intensity = 1.0;
-        light.shadowEnabled = true;
+        light.shadowEnabled = true; //设置阴影可投射
 
         sun.receiveShadows = true;
         moon.receiveShadows = true;
         earth.receiveShadows = true;
         var shadowGenerator = new BABYLON.ShadowGenerator(2048, light);
+        //设置为可接收阴影
         shadowGenerator.addShadowCaster(moon);
         shadowGenerator.addShadowCaster(earth);
         shadowGenerator.addShadowCaster(sun);
@@ -126,21 +123,30 @@ export default class SunEclipse {
             earth.rotation.y = (elapsed_t * (360 * 365.24)) / min2ms / 1000;
 
             // Update moon position and rotation
-            moonSpeed =
-                ((elapsed_t % einUmlauf) * 360) / (27.3 * (einUmlauf / 365.24)) * 0.2;
-            var moonradians = (moonSpeed * Math.PI) / 180;
-            moon.position.x =
-                Math.cos(moonradians) * moonOrbitRadius + earth.position.x;
-            moon.position.z =
-                Math.sin(moonradians) * moonOrbitRadius + earth.position.z;
-            moon.rotation.y = (elapsed_t * (360 * 27.3)) / min2ms;
+            /*var moon_tiltAngle = BABYLON.Tools.ToRadians(-5.15);
+            moonSpeed = ((elapsed_t % (einUmlauf)) * 360) / (27.3 * (einUmlauf / 365.24));
+            var moonradians = moonSpeed * Math.PI / 180;
+            moon.position.x = (Math.cos(moonradians) * moonOrbitRadius) + earth.position.x;
+            moon.position.z = (Math.sin(moonradians) * moonOrbitRadius) * Math.cos(-5.15 * Math.PI / 180) + earth.position.z;
+            moon.position.y = (Math.sin(moonradians) * moonOrbitRadius) * Math.sin(-5.15 * Math.PI / 180) + earth.position.y;
+            moon.rotation.y = radians * 27 + moon_tiltAngle;*/
+            var moon_tiltAngle = BABYLON.Tools.ToRadians(-5.15);
+            //设置椭圆半长轴和半短轴
+            var moonOrbitRadiusX = 30; // semi-major axis length in x-direction
+            var moonOrbitRadiusZ = 30; // semi-minor axis length in z-direction
+
+            moonSpeed = ((elapsed_t % (einUmlauf)) * 360) / (27.3 * (einUmlauf / 365.24)) * 0.5;
+            var moonradians = moonSpeed * Math.PI / 180;
+
+            moon.position.x = (Math.cos(moonradians) * moonOrbitRadiusX) + earth.position.x;
+            moon.position.z = (Math.sin(moonradians) * moonOrbitRadiusZ) + earth.position.z;
+            moon.position.y = (Math.sin(moonradians) * moonOrbitRadius) * Math.sin(-5.15 * Math.PI / 180) + earth.position.y;
+            moon.rotation.y = moonradians + moon_tiltAngle;
         };
 
-        camera.fov = 0.5;
+        camera.fov = 0.2;
+        //设置相机位置
         function updateCamera() {
-            //console.log(`earth.position: ${earth.position}`)
-            //console.log(`camera: ${camera}`)
-            // Calculate the midpoint between Earth and moon
             var midpoint = BABYLON.Vector3.Lerp(earth.position, moon.position, 0.2);
 
             // Set the camera's position to the midpoint
