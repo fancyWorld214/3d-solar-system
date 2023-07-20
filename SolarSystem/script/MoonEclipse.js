@@ -61,6 +61,20 @@ export default class SunEclipse {
         var light = new BABYLON.PointLight("dir01", new BABYLON.Vector3(-0.0, -0.0, 0.0), scene);
         light.diffuse = new BABYLON.Color3(1.0, 1.0, 1.0);
         light.intensity = 1.0;
+        light.shadowEnabled = true;
+
+        sun.receiveShadows = true;
+        moon.receiveShadows = true;
+        earth.receiveShadows = true;
+        var shadowGenerator = new BABYLON.ShadowGenerator(2048, light);
+        shadowGenerator.addShadowCaster(moon);
+        shadowGenerator.addShadowCaster(earth);
+        shadowGenerator.addShadowCaster(sun);
+        shadowGenerator.blurScale = 5;
+        //使用过滤器使阴影过渡更平滑
+        shadowGenerator.usePoissonSampling = true; // Enable Poisson sampling for smoother shadows
+        shadowGenerator.useKernelBlur = true; // Enable kernel blur for smoother shadows
+
 
         scene.clearColor = new BABYLON.Color3(0.02, 0.02, 0.1);
 
@@ -122,12 +136,12 @@ export default class SunEclipse {
             moon.rotation.y = (elapsed_t * (360 * 27.3)) / min2ms;
         };
 
-        camera.fov = 1.0;
+        camera.fov = 0.5;
         function updateCamera() {
             //console.log(`earth.position: ${earth.position}`)
             //console.log(`camera: ${camera}`)
             // Calculate the midpoint between Earth and moon
-            var midpoint = BABYLON.Vector3.Lerp(earth.position, moon.position, 0.5);
+            var midpoint = BABYLON.Vector3.Lerp(earth.position, moon.position, 0.2);
 
             // Set the camera's position to the midpoint
             camera.position = midpoint;
