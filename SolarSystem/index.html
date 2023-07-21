@@ -2,50 +2,50 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
-  <title>CGV-Aufgabe 1</title>
-  <script src="https://cdn.babylonjs.com/babylon.js"></script>
-  <script src="script/hand.js"></script>
-  <script src="script/MainScene.js" type="module"></script>
-  <style type="text/css">
-    html,
-    body,
-    canvas {
-      width: 100%;
-      height: 95%;
-      padding: 0;
-      margin: 0;
-      overflow: hidden;
-    }
+    <title>CGV-Aufgabe 1</title>
+    <script src="https://cdn.babylonjs.com/babylon.js"></script>
+    <script src="script/hand.js"></script>
+    <script src="script/MainScene.js" type="module"></script>
+    <style type="text/css">
+        html,
+        body,
+        canvas {
+            width: 100%;
+            height: 95%;
+            padding: 0;
+            margin: 0;
+            overflow: hidden;
+        }
 
-    #renderCanvas {
-      display: none;
-    }
+        #renderCanvas {
+            display: none;
+        }
 
-    #moonCanvas {
-      display: none;
-    }
+        #moonCanvas {
+            display: none;
+        }
 
-    button {
-      color: black;
-      font-display: block;
-    }
+        button {
+            color: black;
+            font-display: block;
+        }
 
-    video {
-      display: none;
-    }
-  </style>
+        video {
+            display: none;
+        }
+    </style>
 </head>
 
 <body>
-  <!-- 若需触发画中画，必须用户侧有相应的动作，无法直接从js代码触发 -->
-  <button id="btn_1">日食</button>
-  <button id="btn_2">月食</button>
-  <button id="ChangeButton">换肤</button>
-  <canvas id="overallCanvas"></canvas>
-  <canvas id="renderCanvas"></canvas>
-  <canvas id="moonCanvas"></canvas>
-  <video id="video" autoplay preload="auto"></video>
-  <video id="video2" autoplay preload="auto"></video>
+    <!-- 若需触发画中画，必须用户侧有相应的动作，无法直接从js代码触发 -->
+    <button id="btn_1">日食</button>
+    <button id="btn_2">月食</button>
+    <button id="ChangeButton">换肤</button>
+    <canvas id="overallCanvas"></canvas>
+    <canvas id="renderCanvas"></canvas>
+    <canvas id="moonCanvas"></canvas>
+    <video id="video" autoplay preload="auto"></video>
+    <video id="video2" autoplay preload="auto"></video>
 </body>
 
 </html>

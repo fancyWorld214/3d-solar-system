@@ -6,23 +6,7 @@ export default class SunEclipse {
         this.camera = camera;
     }
     setUp(engine, scene, canvas, camera) {
-        //diameterScale
-        var diameterScale = 35;
-        var sun_diameter = 1.3927 * diameterScale;
-        var earth_diameter = 0.12756 * diameterScale;
-        var moon_diameter = 5;
-        var mars_diameter = 0.6794 * diameterScale;
-        var jupiter_diameter = 14.392 * diameterScale;
-        var neptune_diameter = 3.883 * diameterScale;
-
-        var distanceScale = 1;
-        // var earth_distance = 149.6 * distanceScale;
-        var earth_distance = 20;
-        var moon_distance = 0.9 * distanceScale;
-        var mars_distance = 227.9 * distanceScale;
-        var jupiter_distance = 778.6 * distanceScale;
-        var neptune_distance = 4495 * distanceScale;
-
+        //背景
         var skybox = BABYLON.MeshBuilder.CreateBox("skyBox", { size: 1000.0 }, scene);
         var skyboxMaterial = new BABYLON.StandardMaterial("skyBox", scene);
         skyboxMaterial.backFaceCulling = false;
@@ -32,118 +16,123 @@ export default class SunEclipse {
         skyboxMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
         skybox.material = skyboxMaterial;
 
-        var sun = BABYLON.Mesh.CreateSphere("Sun", sun_diameter, 0.65, scene);
-        var earth = BABYLON.Mesh.CreateSphere("Earth", earth_diameter, 0.3, scene);
-        var moon = BABYLON.Mesh.CreateSphere("Moon", moon_diameter, 0.075, scene);
+        //日月直径和距离，实际均为400倍，这里模拟以20倍进行
+        var moon_diameter = 5;
+        var sun_diameter = (400 / 14.2) * moon_diameter;
+        var moon_distance = 20;
+        var sun_distance = 20 * moon_distance;
 
-        camera.parent = sun;
-
-        var material1 = new BABYLON.StandardMaterial("default1", scene);
-        material1.diffuseTexture = new BABYLON.Texture("assets/earth.jpg", scene);
-        material1.specularColor = new BABYLON.Color3(0, 0, 0);
-        material1.emissiveColor = new BABYLON.Color3(0.1, 0.1, 0.1);
-        material1.diffuseTexture.vScale = -1;
-        material1.diffuseTexture.uScale = -1;
+        var sun = BABYLON.Mesh.CreateSphere("Sun", 20, sun_diameter, scene);
+        var moon = BABYLON.Mesh.CreateSphere("Moon", 20, moon_diameter, scene);
 
         var material2 = new BABYLON.StandardMaterial("default2", scene);
         material2.diffuseTexture = new BABYLON.Texture("assets/moon.jpg", scene);
         material2.specularColor = new BABYLON.Color3(0, 0, 0);
         material2.emissiveColor = new BABYLON.Color3(0.1, 0.1, 0.1);
-        material1.diffuseTexture.vScale = -1;
-        material1.diffuseTexture.uScale = -1;
+        // material2.diffuseTexture.vScale = -1;
+        // material2.diffuseTexture.uScale = -1;
 
         var material3 = new BABYLON.StandardMaterial("default3", scene);
         material3.diffuseTexture = new BABYLON.Texture("assets/sun.jpg", scene);
         material3.specularColor = new BABYLON.Color3(0, 0, 0);
         material3.emissiveColor = new BABYLON.Color3(1, 1, 1);
 
-        earth.material = material1;
         moon.material = material2;
         sun.material = material3;
 
-        var light = new BABYLON.PointLight("dir01", new BABYLON.Vector3(-0.0, -0.0, 0.0), scene);
+        //摄像机参数
+        //位置固定在原点，方向固定向太阳
+        camera.fov = 0.5;
+        camera.position = new BABYLON.Vector3(0, 0, 0);
+        function updateCamera() {
+
+            camera.setTarget(sun.position);
+        }
+
+        //地球位置（地心系统）(固定)
+        //设置太阳位置（地心系统）(固定)
+        sun.position.x = sun_distance;
+        sun.position.y = 0.0;
+        sun.position.z = 0.0;
+        //设置月球初始位置
+        moon.position.x = moon_distance;
+        moon.position.y = 0;
+        moon.position.z = 0;
+
+
+        var light = new BABYLON.PointLight("dir01", sun.position, scene);
         light.diffuse = new BABYLON.Color3(1.0, 1.0, 1.0);
-        light.intensity = 1.0;
+        light.intensity = 5.0;
 
         scene.clearColor = new BABYLON.Color3(0.02, 0.02, 0.1);
-
-        var d = new Date();
-        var startTime = d.getTime();
+        //更新月球位置
+        var startTime = performance.now(); // 当前时间，毫秒
         var lastTime = startTime;
 
-        var sim_year = 1.0;                         // one simulated year in minutes
-        var sim_month = sim_year / (365.24 / 27.3);
-        var sim_day = sim_year / 365.24;
+        //月球轨道为椭圆
+        var moonMajorSemi = 1.1 * moon_distance;
+        var moonMinorSemi = 0.94 * moonMajorSemi;
+        var moonFocusSemi = Math.pow(moonMajorSemi * moonMajorSemi
+            - moonMinorSemi * moonMinorSemi, 0.5);
 
-        var moon_local_pos = new BABYLON.Vector3((-1.0) * moon_distance, 0, 0);
-
-        //console.log(sun.position);
-
-        // Set initial earth position
-        earth.position.x = earth_distance;
-        earth.position.y = 0.0;
-        earth.position.z = 0.0;
-
-        // Set initial moon position
-        moon.position.x = earth.position.x - moon_distance;
-        moon.position.y = earth.position.y;
-        moon.position.z = earth.position.z;
-
-        var earthSpeed = 0;
+        var min = 100;
+        var max = -100;
+        //模拟进动
+        var omega = 1.1;
         var moonSpeed = 0;
-        var earthOrbitRadius = earth_distance;
-        var moonOrbitRadius = moon_distance;
         scene.beforeRender = function () {
             var incremental = false;
             var incremental_buggy = false;
 
-            var d = new Date();
-            var time = d.getTime(); // get milliseconds since 1970
-            var elapsed_t = time - startTime; // milliseconds since start
-            var delta_t = lastTime - time; // milliseconds since last frame
-            lastTime = time;
+            var time = performance.now(); // 当前时间，毫秒
+            var elapsed_t = time - startTime;
+            var delta_t = time - lastTime; // 渲染上一帧时间
+            lastTime = time; //更新lastTime
 
             var min2ms = 1000.0 * 60.0; // milliseconds in minutes
             var einUmlauf = 1 * min2ms;
 
-            // Update earth position and rotation
-            earthSpeed = ((elapsed_t % einUmlauf) * 360) / einUmlauf;
-            var radians = (earthSpeed * Math.PI) / 180;
-            earth.position.x = Math.cos(radians) * earthOrbitRadius;
-            earth.position.z = Math.sin(radians) * earthOrbitRadius;
-
-            earth.rotation.y = (elapsed_t * (360 * 365.24)) / min2ms / 1000;
+            sun.rotation.y = (elapsed_t * 25) / min2ms * 0.1;
 
             // Update moon position and rotation
-            moonSpeed =
-                ((elapsed_t % einUmlauf) * 360) / (27.3 * (einUmlauf / 365.24)) * 0.2;
-            var moonradians = (moonSpeed * Math.PI) / 180;
+            moonSpeed = ((-elapsed_t % einUmlauf) * 360) / (27.3 * (einUmlauf / 365.24)) * 0.1;
+            //console.log(moonSpeed);
+            var moonRadians = (moonSpeed * Math.PI) / 180;
+
+            // moon.position.x =
+            //     Math.cos(moonRadians) * moonMajorSemi - moonFocusSemi;
+            // console.log(moonMajorSemi, moonFocusSemi);
+            // moon.position.z =
+            //     Math.sin(moonRadians) * moonMinorSemi;
             moon.position.x =
-                Math.cos(moonradians) * moonOrbitRadius + earth.position.x;
+                Math.cos(moonRadians) * Math.cos(omega * moonRadians) * moonMajorSemi
+                - Math.sin(omega * moonRadians) * Math.sin(moonRadians) * moonMinorSemi - moonFocusSemi;
+            moon.position.y =
+                0.05 * moon.position.x * Math.sin(moonRadians);
             moon.position.z =
-                Math.sin(moonradians) * moonOrbitRadius + earth.position.z;
-
+                Math.cos(moonRadians) * Math.sin(omega * moonRadians) * moonMajorSemi
+                + Math.cos(omega * moonRadians) * Math.sin(moonRadians) * moonMinorSemi;
             moon.rotation.y = (elapsed_t * (360 * 27.3)) / min2ms;
+
+            if (moon.position.z < 0.1 && moon.position.z > -0.1 && moon.position.x > 0)
+                console.log(moon.position.y);
+
+
+            // if (moon.position.z < 0.1 && moon.position.z > -0.1) {
+
+            //     if (moon.position.x < min && moon.position.x > 0) min = moon.position.x;
+            //     if (moon.position.x > max) max = moon.position.x;
+            //     console.log("moon", max, "sun", min);
+            // }
         };
-
-        camera.fov = 0.05;
-        function updateCamera() {
-            // Calculate the direction from the Earth to the Sun
-            var direction = BABYLON.Vector3.Normalize(
-                earth.position.subtract(sun.position)
-            );
-            camera.position = earth.position.add(direction.scale(0.8));
-
-            // Set the camera's target to always look at the Sun
-            camera.setTarget(sun.position);
-        }
 
         // Register the update function to be called every frame
         scene.registerBeforeRender(updateCamera);
 
         engine.runRenderLoop(function () {
             scene.render();
-        });
+        })
+
     }
     Building() {
         if (!BABYLON.Engine.isSupported()) {
@@ -152,10 +141,6 @@ export default class SunEclipse {
             // 初始化场景要素
             // 配置场景
             this.setUp(this.engine, this.scene, this.canvas, this.camera);
-            //this.setUpCameraMovingPattern(this.camera, this.scene);
-            // window.addEventListener("resize", function () {
-            //     this.engine.resize();
-            // });
         }
     }
 }

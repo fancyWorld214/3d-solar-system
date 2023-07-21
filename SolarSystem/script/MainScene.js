@@ -97,7 +97,7 @@ if (!BABYLON.Engine.isSupported()) {
         video.src = videoURL;
         chunks = [];
         recorder.start();
-    }, 50);
+    }, 400);
     setInterval(() => {
         // Create a Blob object from the recorded chunks
         const blob = new Blob(chunks2, { type: "video/webm" });
@@ -107,7 +107,7 @@ if (!BABYLON.Engine.isSupported()) {
         video2.src = videoURL;
         chunks2 = [];
         recorder2.start();
-    }, 50);
+    }, 2000);
 
     //必须要video的metadata加载完成后才能进入画中画
     video.addEventListener("loadedmetadata", () => {
